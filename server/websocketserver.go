@@ -1,7 +1,6 @@
-package main
+package server
 
 import (
-	"flag"
 	"log"
 	"net/http"
 	"text/template"
@@ -9,10 +8,9 @@ import (
 	"github.com/pdxjohnny/easysock"
 )
 
-var addr = flag.String("addr", ":8080", "http service address")
-var homeTempl = template.Must(template.ParseFiles("home.html"))
+var homeTempl = template.Must(template.ParseFiles("../static/home.html"))
 
-func serveHome(w http.ResponseWriter, r *http.Request) {
+func ServeHome(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.Error(w, "Not found", 404)
 		return
@@ -25,13 +23,14 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 	homeTempl.Execute(w, r.Host)
 }
 
-func main() {
-	flag.Parse()
+func Run() error {
 	go easysock.Hub.Run()
-	http.HandleFunc("/", serveHome)
+	http.HandleFunc("/", ServeHome)
 	http.HandleFunc("/ws", easysock.ServeWs)
-	err := http.ListenAndServe(*addr, nil)
+	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
-		log.Fatal("ListenAndServe: ", err)
+		log.Println(err)
+		return err
 	}
+	return nil
 }
