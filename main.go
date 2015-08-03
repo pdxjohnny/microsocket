@@ -1,13 +1,13 @@
 package main
 
 import (
-  "log"
+	"log"
 
-  "github.com/pdxjohnny/dist-rts/server"
+	"github.com/pdxjohnny/dist-rts/server"
 )
 
 func main() {
-  err := server.Run()
+	err := server.Run()
 	if err != nil {
 		log.Println(err)
 	}

@@ -14,6 +14,11 @@ type Conn struct {
   Recv func(message []byte)
 }
 
+func NewClient() *Conn {
+  conn := new(Conn)
+	return conn
+}
+
 func (ws *Conn) Connect(url_string string) (err error) {
 	u, err := url.Parse(url_string)
 	if err != nil {
@@ -54,4 +59,9 @@ func (ws *Conn) Write(message []byte) (err error) {
     return err
   }
   return nil
+}
+
+func printRecv(raw_message []byte) {
+  message := string(raw_message)
+  fmt.Println(message)
 }

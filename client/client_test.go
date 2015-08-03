@@ -33,7 +33,7 @@ func TestClientSendRecv(t *testing.T) {
   go server.Run()
   correctResponse := make(chan int)
   randString := randSeq(50)
-	ws := new(Conn)
+	ws :=NewClient()
 	ws.Recv = checkMessage(randString, correctResponse)
   wsUrl := fmt.Sprintf("http://%s:%s/ws", conf.Host, conf.Port)
 	err := ws.Connect(wsUrl)
