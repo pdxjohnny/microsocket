@@ -1,11 +1,13 @@
 package client
 
 import (
+  "fmt"
   "log"
   "testing"
   "math/rand"
 
   "github.com/pdxjohnny/dist-rts/server"
+  "github.com/pdxjohnny/dist-rts/config"
 )
 
 var randLetters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
@@ -26,13 +28,15 @@ func checkMessage(should_be string, correctResponse chan int) func(message []byt
 	}
 }
 
-func TestSendRecv(t *testing.T) {
+func TestClientSendRecv(t *testing.T) {
+	conf := config.Load()
   go server.Run()
   correctResponse := make(chan int)
   randString := randSeq(50)
 	ws := new(Conn)
 	ws.Recv = checkMessage(randString, correctResponse)
-	err := ws.Connect("http://localhost:8080/ws")
+  wsUrl := fmt.Sprintf("http://%s:%s/ws", conf.Host, conf.Port)
+	err := ws.Connect(wsUrl)
 	if err != nil {
 		log.Println(err)
 	}

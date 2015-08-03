@@ -1,14 +1,13 @@
 package server
 
 import (
-	"log"
+	"fmt"
 	"net/http"
 	"text/template"
 
 	"github.com/pdxjohnny/easysock"
+	"github.com/pdxjohnny/dist-rts/config"
 )
-
-var homeTempl = template.Must(template.ParseFiles("../static/home.html"))
 
 func ServeHome(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
@@ -20,16 +19,22 @@ func ServeHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	homeTempl, err := template.ParseFiles("../static/home.html")
+	if err != nil {
+		homeTempl, err = template.ParseFiles("static/home.html")
+	}
 	homeTempl.Execute(w, r.Host)
 }
 
 func Run() error {
+	conf := config.Load()
 	go easysock.Hub.Run()
 	http.HandleFunc("/", ServeHome)
 	http.HandleFunc("/ws", easysock.ServeWs)
-	err := http.ListenAndServe(":8080", nil)
+	port := fmt.Sprintf(":%s", conf.Port)
+	err := http.ListenAndServe(port, nil)
 	if err != nil {
-		log.Println(err)
+		fmt.Println(err)
 		return err
 	}
 	return nil
