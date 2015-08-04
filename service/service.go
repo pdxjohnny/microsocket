@@ -38,8 +38,14 @@ func (service *Service) MethodMap(raw_message []byte) {
 	if err != nil || message.Method == "" {
 		return
 	}
+	// Call the method by name from the pointer to struct service.Caller
+	boundMethod := reflect.ValueOf(service.Caller).MethodByName(message.Method)
+	// Make sure we have a callable method
+	if !boundMethod.IsValid() {
+		return
+	}
 	// Create an argument list for the method
 	args := []reflect.Value{reflect.ValueOf(raw_message)}
-	// Call the method by name from the pointer to struct service.Caller
-	reflect.ValueOf(service.Caller).MethodByName(message.Method).Call(args)
+	// Call the method
+	boundMethod.Call(args)
 }
