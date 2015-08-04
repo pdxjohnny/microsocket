@@ -7,7 +7,6 @@ import (
 
 	"github.com/pdxjohnny/microsocket/config"
 	"github.com/pdxjohnny/microsocket/random"
-	"github.com/pdxjohnny/microsocket/server"
 )
 
 func checkMessage(should_be string, correctResponse chan int) func(message []byte) {
@@ -20,7 +19,6 @@ func checkMessage(should_be string, correctResponse chan int) func(message []byt
 
 func TestClientSendRecv(t *testing.T) {
 	conf := config.Load()
-	go server.Run()
 	correctResponse := make(chan int)
 	randString := random.Letters(50)
 	ws := NewClient()

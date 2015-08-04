@@ -8,7 +8,6 @@ import (
 
 	"github.com/pdxjohnny/microsocket/config"
 	"github.com/pdxjohnny/microsocket/random"
-	"github.com/pdxjohnny/microsocket/server"
 )
 
 type TestService struct {
@@ -41,7 +40,6 @@ func (service *TestService) TestServiceMessage(raw_message []byte) {
 
 func TestServiceCallMethod(t *testing.T) {
 	conf := config.Load()
-	go server.Run()
 	correctResponse := make(chan int)
 	randString := random.Letters(25)
 	service := NewTestService()
