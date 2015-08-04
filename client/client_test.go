@@ -5,9 +5,9 @@ import (
 	"log"
 	"testing"
 
-	"github.com/pdxjohnny/dist-rts/config"
-	"github.com/pdxjohnny/dist-rts/random"
-	"github.com/pdxjohnny/dist-rts/server"
+	"github.com/pdxjohnny/websocket-mircoservice/config"
+	"github.com/pdxjohnny/websocket-mircoservice/random"
+	"github.com/pdxjohnny/websocket-mircoservice/server"
 )
 
 func checkMessage(should_be string, correctResponse chan int) func(message []byte) {
