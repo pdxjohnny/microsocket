@@ -29,14 +29,7 @@ type TestServiceMessage struct {
 	Data   string
 }
 
-func checkResponse(raw_service interface{}, raw_message []byte) {
-	fmt.Println("Got to check")
-	service, ok := raw_service.(*TestService)
-	if !ok {
-		// raw_service was not of type *TestService. The assertion failed
-		return
-	}
-	fmt.Println(service)
+func (service *TestService) TestServiceMessage(raw_message []byte) {
 	// Create a new message struct
 	message := new(TestServiceMessage)
 	// Parse the message to a json
@@ -50,13 +43,13 @@ func TestServiceCallMethod(t *testing.T) {
 	conf := config.Load()
 	go server.Run()
 	correctResponse := make(chan int)
-	randString := random.Letters(50)
+	randString := random.Letters(25)
 	service := NewTestService()
 	service.ShouldBe = randString
 	service.CorrectResponse = correctResponse
-	service.Methods = map[string]func(interface{}, []byte){
-		"TestServiceMessage": checkResponse,
-	}
+	// service.Methods = map[string]func(interface{}, []byte){
+	// 	"TestServiceMessage": checkResponse,
+	// }
 	wsUrl := fmt.Sprintf("http://%s:%s/ws", conf.Host, conf.Port)
 	err := service.Connect(wsUrl)
 	if err != nil {

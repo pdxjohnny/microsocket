@@ -2,7 +2,6 @@ package service
 
 import (
 	"encoding/json"
-	"fmt"
 	"reflect"
 
 	"github.com/pdxjohnny/microsocket/client"
@@ -39,7 +38,8 @@ func (service *Service) MethodMap(raw_message []byte) {
 	if err != nil || message.Method == "" {
 		return
 	}
-	fmt.Println(reflect.TypeOf(service.Methods))
-	fmt.Println(service.Methods[message.Method])
-	service.Methods[message.Method](service.Caller, raw_message)
+	// Create an argument list for the method
+	args := []reflect.Value{reflect.ValueOf(raw_message)}
+	// Call the method by name from the pointer to struct service.Caller
+	reflect.ValueOf(service.Caller).MethodByName(message.Method).Call(args)
 }
