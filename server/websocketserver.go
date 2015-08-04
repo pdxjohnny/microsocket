@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"text/template"
 
-	"github.com/pdxjohnny/microsocket/config"
 	"github.com/pdxjohnny/easysock"
+	"github.com/pdxjohnny/microsocket/config"
 )
 
 func ServeHome(w http.ResponseWriter, r *http.Request) {
