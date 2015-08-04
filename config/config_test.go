@@ -1,11 +1,11 @@
 package config
 
 import (
-  "log"
-  "testing"
+	"log"
+	"testing"
 )
 
 func TestConfigLoad(t *testing.T) {
-  conf := Load()
-  log.Println(conf)
+	conf := Load()
+	log.Println(conf)
 }

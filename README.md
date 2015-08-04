@@ -35,4 +35,9 @@ Outline
   - Construction service
 - Javascript client to render game
 
+Testing
+---
+
+To run tests the Websocket server must be up.
+
 [js-rts]: https://github.com/pdxjohnny/js-rts

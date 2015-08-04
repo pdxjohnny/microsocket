@@ -1,9 +1,9 @@
 package config
 
 import (
-	"os"
-	"log"
 	"encoding/json"
+	"log"
+	"os"
 )
 
 type Config struct {

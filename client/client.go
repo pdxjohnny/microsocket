@@ -11,11 +11,11 @@ import (
 
 type Conn struct {
 	Socket *websocket.Conn
-  Recv func(message []byte)
+	Recv   func(message []byte)
 }
 
 func NewClient() *Conn {
-  conn := new(Conn)
+	conn := new(Conn)
 	return conn
 }
 
@@ -49,19 +49,19 @@ func (ws *Conn) Read() (err error) {
 		if err != nil {
 			return err
 		}
-    go ws.Recv(message)
+		go ws.Recv(message)
 	}
 }
 
 func (ws *Conn) Write(message []byte) (err error) {
-  err = ws.Socket.WriteMessage(1, message)
-  if err != nil {
-    return err
-  }
-  return nil
+	err = ws.Socket.WriteMessage(1, message)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func printRecv(raw_message []byte) {
-  message := string(raw_message)
-  fmt.Println(message)
+	message := string(raw_message)
+	fmt.Println(message)
 }

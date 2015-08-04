@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"text/template"
 
-	"github.com/pdxjohnny/easysock"
 	"github.com/pdxjohnny/dist-rts/config"
+	"github.com/pdxjohnny/easysock"
 )
 
 func ServeHome(w http.ResponseWriter, r *http.Request) {
