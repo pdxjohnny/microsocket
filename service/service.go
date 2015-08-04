@@ -2,7 +2,6 @@ package service
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/pdxjohnny/microsocket/client"
 )
@@ -17,7 +16,7 @@ type MethodCall struct {
 	Method string
 }
 
-type Method func(*interface{}, []byte)
+type Method func(*Service, []byte)
 
 func NewService() *Service {
 	service := new(Service)
@@ -35,7 +34,5 @@ func (service *Service) MethodMap(raw_message []byte) {
 	if err != nil || message.Method == "" {
 		return
 	}
-	fmt.Println("Method", message.Method)
-	fmt.Println(service.Methods[message.Method])
-	service.Methods[message.Method](service.(interface{}), raw_message)
+	service.Methods[message.Method](service, raw_message)
 }
