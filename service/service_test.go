@@ -12,19 +12,37 @@ import (
 )
 
 type TestService struct {
+	*Service
+	CorrectResponse chan int
+	ShouldBe        string
+}
+
+func NewTestService() *TestService {
+	inner := NewService()
+	service := TestService{Service: inner}
+	service.Caller = &service
+	return &service
+}
+
+type TestServiceMessage struct {
 	Method string
 	Data   string
 }
 
-func checkMethod(should_be string, correctResponse chan int) func(service *Service, raw_message []byte) {
-	return func(service *Service, raw_message []byte) {
-		// Create a new message struct
-		message := new(TestService)
-		// Parse the message to a json
-		json.Unmarshal(raw_message, &message)
-		if should_be == string(message.Data) {
-			correctResponse <- 1
-		}
+func checkResponse(raw_service interface{}, raw_message []byte) {
+	fmt.Println("Got to check")
+	service, ok := raw_service.(*TestService)
+	if !ok {
+		// raw_service was not of type *TestService. The assertion failed
+		return
+	}
+	fmt.Println(service)
+	// Create a new message struct
+	message := new(TestServiceMessage)
+	// Parse the message to a json
+	json.Unmarshal(raw_message, &message)
+	if service.ShouldBe == string(message.Data) {
+		service.CorrectResponse <- 1
 	}
 }
 
@@ -33,9 +51,11 @@ func TestServiceCallMethod(t *testing.T) {
 	go server.Run()
 	correctResponse := make(chan int)
 	randString := random.Letters(50)
-	service := NewService()
-	service.Methods = map[string]Method{
-		"TestService": checkMethod(randString, correctResponse),
+	service := NewTestService()
+	service.ShouldBe = randString
+	service.CorrectResponse = correctResponse
+	service.Methods = map[string]func(interface{}, []byte){
+		"TestServiceMessage": checkResponse,
 	}
 	wsUrl := fmt.Sprintf("http://%s:%s/ws", conf.Host, conf.Port)
 	err := service.Connect(wsUrl)
@@ -44,7 +64,7 @@ func TestServiceCallMethod(t *testing.T) {
 	}
 	go service.Read()
 	log.Println("Waiting for correctResponse", randString)
-	checkJson := fmt.Sprintf("{\"data\": \"%s\", \"method\": \"TestService\"}", randString)
+	checkJson := fmt.Sprintf("{\"data\": \"%s\", \"method\": \"TestServiceMessage\"}", randString)
 	service.Write([]byte(checkJson))
 	<-correctResponse
 	log.Println("Got correctResponse", randString)

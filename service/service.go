@@ -2,27 +2,32 @@ package service
 
 import (
 	"encoding/json"
+	"fmt"
+	"reflect"
 
 	"github.com/pdxjohnny/microsocket/client"
 )
 
 type Service struct {
-	client.Conn
+	*client.Conn
 	// Strings as keys funcitons to call as values
-	Methods map[string]Method
+	Methods map[string]func(interface{}, []byte)
+	// The struct to call methods
+	Caller interface{}
 }
 
 type MethodCall struct {
 	Method string
 }
 
-type Method func(*Service, []byte)
-
 func NewService() *Service {
-	service := new(Service)
+	inner := client.NewClient()
+	service := Service{
+		Conn: inner,
+	}
 	// Set Recv to MethodMap which will call the correct method
 	service.Recv = service.MethodMap
-	return service
+	return &service
 }
 
 func (service *Service) MethodMap(raw_message []byte) {
@@ -34,5 +39,7 @@ func (service *Service) MethodMap(raw_message []byte) {
 	if err != nil || message.Method == "" {
 		return
 	}
-	service.Methods[message.Method](service, raw_message)
+	fmt.Println(reflect.TypeOf(service.Methods))
+	fmt.Println(service.Methods[message.Method])
+	service.Methods[message.Method](service.Caller, raw_message)
 }
