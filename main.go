@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/pdxjohnny/mircosocket/server"
+	"github.com/pdxjohnny/microsocket/server"
 )
 
 func main() {

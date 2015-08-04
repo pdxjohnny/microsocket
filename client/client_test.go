@@ -5,9 +5,9 @@ import (
 	"log"
 	"testing"
 
-	"github.com/pdxjohnny/mircosocket/config"
-	"github.com/pdxjohnny/mircosocket/random"
-	"github.com/pdxjohnny/mircosocket/server"
+	"github.com/pdxjohnny/microsocket/config"
+	"github.com/pdxjohnny/microsocket/random"
+	"github.com/pdxjohnny/microsocket/server"
 )
 
 func checkMessage(should_be string, correctResponse chan int) func(message []byte) {

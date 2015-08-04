@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/pdxjohnny/mircosocket/client"
+	"github.com/pdxjohnny/microsocket/client"
 )
 
 type Service struct {
