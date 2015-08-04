@@ -6,9 +6,9 @@ import (
 	"log"
 	"testing"
 
-	"github.com/pdxjohnny/websocket-mircoservice/config"
-	"github.com/pdxjohnny/websocket-mircoservice/random"
-	"github.com/pdxjohnny/websocket-mircoservice/server"
+	"github.com/pdxjohnny/mircosocket/config"
+	"github.com/pdxjohnny/mircosocket/random"
+	"github.com/pdxjohnny/mircosocket/server"
 )
 
 type TestService struct {

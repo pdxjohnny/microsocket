@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"text/template"
 
-	"github.com/pdxjohnny/websocket-mircoservice/config"
+	"github.com/pdxjohnny/mircosocket/config"
 	"github.com/pdxjohnny/easysock"
 )
 
