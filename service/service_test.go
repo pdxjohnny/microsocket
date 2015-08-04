@@ -4,26 +4,16 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"math/rand"
 	"testing"
 
 	"github.com/pdxjohnny/dist-rts/config"
+	"github.com/pdxjohnny/dist-rts/random"
 	"github.com/pdxjohnny/dist-rts/server"
 )
-
-var randLetters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 type TestService struct {
 	Method string
 	Data   string
-}
-
-func randSeq(length int) string {
-	currByte := make([]rune, length)
-	for i := range currByte {
-		currByte[i] = randLetters[rand.Intn(len(randLetters))]
-	}
-	return string(currByte)
 }
 
 func checkMethod(should_be string, correctResponse chan int) func(service *Service, raw_message []byte) {
@@ -42,7 +32,7 @@ func TestServiceCallMethod(t *testing.T) {
 	conf := config.Load()
 	go server.Run()
 	correctResponse := make(chan int)
-	randString := randSeq(50)
+	randString := random.Letters(50)
 	service := NewService()
 	service.Methods = map[string]Method{
 		"TestService": checkMethod(randString, correctResponse),
