@@ -16,8 +16,8 @@ type TestService struct {
 	Data   string
 }
 
-func checkMethod(should_be string, correctResponse chan int) func(service *Service, raw_message []byte) {
-	return func(service *Service, raw_message []byte) {
+func checkMethod(should_be string, correctResponse chan int) func(service *interface{}, raw_message []byte) {
+	return func(service *interface{}, raw_message []byte) {
 		// Create a new message struct
 		message := new(TestService)
 		// Parse the message to a json

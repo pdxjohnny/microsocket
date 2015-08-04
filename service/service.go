@@ -17,7 +17,7 @@ type MethodCall struct {
 	Method string
 }
 
-type Method func(*Service, []byte)
+type Method func(*interface{}, []byte)
 
 func NewService() *Service {
 	service := new(Service)
@@ -36,5 +36,6 @@ func (service *Service) MethodMap(raw_message []byte) {
 		return
 	}
 	fmt.Println("Method", message.Method)
-	service.Methods[message.Method](service, raw_message)
+	fmt.Println(service.Methods[message.Method])
+	service.Methods[message.Method](service.(interface{}), raw_message)
 }
