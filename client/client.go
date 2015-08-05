@@ -7,16 +7,21 @@ import (
 	"net/url"
 
 	"github.com/gorilla/websocket"
+	"github.com/pdxjohnny/microsocket/random"
 )
 
 type Conn struct {
 	Socket *websocket.Conn
 	Recv   func(message []byte)
+	// A unique id for the client Conn instance
+	ClientId string
 }
 
 func NewClient() *Conn {
-	conn := new(Conn)
-	return conn
+	conn := Conn{
+		ClientId: random.Letters(20),
+	}
+	return &conn
 }
 
 func (ws *Conn) Connect(url_string string) (err error) {
