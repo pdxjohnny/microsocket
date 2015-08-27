@@ -15,11 +15,14 @@ type Conn struct {
 	Recv   func(message []byte)
 	// A unique id for the client Conn instance
 	ClientId string
+	// Ready to send data
+	ReadyToSend bool
 }
 
 func NewClient() *Conn {
 	conn := Conn{
 		ClientId: random.Letters(20),
+		ReadyToSend: true,
 	}
 	return &conn
 }
@@ -59,11 +62,23 @@ func (ws *Conn) Read() (err error) {
 }
 
 func (ws *Conn) Write(message []byte) (err error) {
+	if !ws.ReadyToSend {
+		return nil
+	}
 	err = ws.Socket.WriteMessage(1, message)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (ws *Conn) WhenReady(
+	toCall interface{},
+	arguments ...interface{},
+) {
+	// fmt.Println(toCall.(type))
+	// callIt := toCall.(func)
+	// callIt(arguments...)
 }
 
 func printRecv(raw_message []byte) {

@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"text/template"
 
-	"github.com/pdxjohnny/easysock"
 	"github.com/pdxjohnny/microsocket/config"
 )
 
@@ -28,9 +27,9 @@ func ServeHome(w http.ResponseWriter, r *http.Request) {
 
 func Run() error {
 	conf := config.Load()
-	go easysock.Hub.Run()
+	go Hub.Run()
 	http.HandleFunc("/", ServeHome)
-	http.HandleFunc("/ws", easysock.ServeWs)
+	http.HandleFunc("/ws", Hub.ServeWs)
 	port := fmt.Sprintf(":%s", conf.Port)
 	err := http.ListenAndServe(port, nil)
 	if err != nil {

@@ -19,8 +19,14 @@ type MethodCall struct {
 	Method string
 }
 
+type GiveName struct {
+	Name string
+}
+
 func NewService() *Service {
 	inner := client.NewClient()
+	// Not ready to send until we have a name
+	inner.ReadyToSend = false;
 	service := Service{
 		Conn: inner,
 	}
@@ -48,4 +54,19 @@ func (service *Service) MethodMap(raw_message []byte) {
 	args := []reflect.Value{reflect.ValueOf(raw_message)}
 	// Call the method
 	boundMethod.Call(args)
+}
+
+func (service *Service) MicroSocketName(raw_message []byte) {
+	// Create a new message struct
+	message := new(GiveName)
+	// Parse the message to a json
+	err := json.Unmarshal(raw_message, &message)
+	// Make sure there is a method to call and no err
+	if err != nil || message.Name == "" {
+		return
+	}
+	// Assign the name to the service
+	service.ClientId = message.Name;
+	// Ready to send
+	service.ReadyToSend = true;
 }
