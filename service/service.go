@@ -25,11 +25,11 @@ type GiveName struct {
 
 func NewService() *Service {
 	inner := client.NewClient()
-	// Not ready to send until we have a name
-	inner.ReadyToSend = false;
 	service := Service{
 		Conn: inner,
 	}
+	// Not ready to send until we have a name
+	<-service.Ready
 	// Set Recv to MethodMap which will call the correct method
 	service.Recv = service.MethodMap
 	return &service
@@ -68,5 +68,5 @@ func (service *Service) MicroSocketName(raw_message []byte) {
 	// Assign the name to the service
 	service.ClientId = message.Name;
 	// Ready to send
-	service.ReadyToSend = true;
+	service.Ready <- true
 }
