@@ -5,6 +5,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"encoding/json"
 
 	"github.com/gorilla/websocket"
 	"github.com/pdxjohnny/microsocket/random"
@@ -68,6 +69,16 @@ func (ws *Conn) Write(message []byte) (err error) {
 		return err
 	}
 	return nil
+}
+
+func (ws *Conn) SendInterface(message interface{}) {
+	// Turn the message into json bytes
+	messageBytes, err := json.Marshal(message)
+	if err != nil {
+		return
+	}
+	// Dump it to clients
+	ws.Write(messageBytes)
 }
 
 func printRecv(raw_message []byte) {
