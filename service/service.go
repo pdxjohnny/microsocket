@@ -10,9 +10,9 @@ import (
 type Service struct {
 	*client.Conn
 	// Strings as keys funcitons to call as values
-	Methods map[string]func(interface{}, []byte)
+	Methods map[string]func(interface{}, []byte) `json:"-"`
 	// The struct to call methods
-	Caller interface{}
+	Caller interface{} `json:"-"`
 }
 
 type MethodCall struct {
@@ -66,7 +66,7 @@ func (service *Service) MicroSocketName(raw_message []byte) {
 		return
 	}
 	// Assign the name to the service
-	service.ClientId = message.Name;
+	service.ClientId = message.Name
 	// Ready to send
 	service.Ready <- true
 }

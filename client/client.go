@@ -11,18 +11,18 @@ import (
 )
 
 type Conn struct {
-	Socket *websocket.Conn
-	Recv   func(message []byte)
+	Socket *websocket.Conn      `json:"-"`
+	Recv   func(message []byte) `json:"-"`
 	// A unique id for the client Conn instance
-	ClientId string
+	ClientId string `json:"clientid"`
 	// Ready to send data
-	Ready chan bool
+	Ready chan bool `json:"-"`
 }
 
 func NewClient() *Conn {
 	conn := Conn{
 		ClientId: random.Letters(20),
-		Ready: make(chan bool, 1),
+		Ready:    make(chan bool, 1),
 	}
 	conn.Ready <- true
 	return &conn
@@ -45,7 +45,7 @@ func (ws *Conn) Connect(url_string string) (err error) {
 
 	wsSocket, resp, err := websocket.NewClient(rawConn, u, wsHeaders, 1024, 1024)
 	if err != nil {
-		fmt.Errorf("websocket.NewClient Error: %s\nResp:%+v", err, resp)
+		err = fmt.Errorf("websocket.NewClient Error: %s\nResp:%+v", err, resp)
 		return err
 	}
 	ws.Socket = wsSocket
